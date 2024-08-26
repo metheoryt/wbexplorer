@@ -10,25 +10,15 @@
 #   universal: false
 
 -e file:.
-aiohappyeyeballs==2.4.0
-    # via aiohttp
-aiohttp==3.10.5
-    # via wbexplorer
-aiosignal==1.3.1
-    # via aiohttp
-attrs==24.2.0
-    # via aiohttp
-brotli==1.1.0
-    # via aiohttp
+certifi==2024.7.4
+    # via requests
+charset-normalizer==3.3.2
+    # via requests
 fake-useragent==1.5.1
     # via wbexplorer
-frozenlist==1.4.1
-    # via aiohttp
-    # via aiosignal
 idna==3.8
-    # via yarl
-multidict==6.0.5
-    # via aiohttp
-    # via yarl
-yarl==1.9.4
-    # via aiohttp
+    # via requests
+requests==2.32.3
+    # via wbexplorer
+urllib3==2.2.2
+    # via requests

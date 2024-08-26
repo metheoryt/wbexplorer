@@ -1,13 +1,13 @@
 [project]
 name = "wbexplorer"
-version = "0.1.0"
+version = "0.1.1"
 description = "Unofficial Wildberries catalog explorer"
 authors = [
     { name = "Maxim Romanyuk", email = "metheoryt@gmail.com" }
 ]
 dependencies = [
-    "aiohttp[speedups]>=3.10.5",
     "fake-useragent>=1.5.1",
+    "requests>=2.32.3",
 ]
 readme = "README.md"
 requires-python = ">= 3.10"
