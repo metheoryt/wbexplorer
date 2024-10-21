@@ -24,10 +24,11 @@ class Client:
         r = self.session.get(BASE_URL)
         r.raise_for_status()
 
-    def search(self, query: str) -> list[WBItem]:
+    def search(self, query: str, page: int = 1) -> list[WBItem]:
         """
         Search for items.
         :param query: search query
+        :param page: page number
         :return: list of WBItem objects.
         """
         response = self.session.get(
@@ -42,6 +43,7 @@ class Client:
                 'appType': 1,
                 'ab_testing': 'false',
                 'suppressSpellcheck': 'false',
+                'page': page,
             },
         )
         items = []
@@ -49,9 +51,10 @@ class Client:
             try:
                 item = WBItem.from_dict(v)
             except Exception as e:
-                print(f'cannot parse into wb item, {type(e)} {e}:', json.dumps(v))
+                print(f'cannot parse into wb item, {type(e).__name__} {e}:', json.dumps(v))
                 continue
             items.append(item)
+        print(f'got {len(items)} results for query "{query}" page {page}')
         return items
 
     @staticmethod
@@ -80,4 +83,5 @@ class Client:
                     Decimal(v['price']['RUB']) / Decimal(100),
                 )
             )
+        print('price history for', item_id, ':', hist)
         return hist
