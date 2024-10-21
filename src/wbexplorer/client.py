@@ -47,23 +47,27 @@ class Client:
             },
         )
         items = []
-        for v in response.json()['data']['products']:
+        rs = response.json()
+        if not rs.get('data', {}).get('products'):
+            print('search response is empty:', rs)
+            return items
+
+        for i, v in enumerate(response.json()['data']['products']):
             try:
                 item = WBItem.from_dict(v)
             except Exception as e:
-                print(f'cannot parse into wb item, {type(e).__name__} {e}:', json.dumps(v))
-                continue
+                print(f'cannot parse WBItem at #{i}, {type(e).__name__} {e}:', json.dumps(v))
+                raise
             items.append(item)
-        print(f'got {len(items)} results for query "{query}" page {page}')
         return items
 
     @staticmethod
     def basket_vol_part(item_id: int) -> tuple[str, int, int]:
-        short_id = item_id // 100000
+        short_id = item_id // 100_000
         if short_id >= 10_000:
             raise ValueError('short_id is too big')
         # [)
-        baskets = [0, 144, 288, 432, 720, 1008, 1062, 1116, 1170, 1314, 1602, 1656, 1920, 2046, 2190, 10_000]
+        baskets = [0, 144, 288, 432, 720, 1008, 1062, 1116, 1170, 1314, 1602, 1656, 1920, 2046, 2190, 2406, 10_000]
         for i in range(1, len(baskets)):
             if baskets[i - 1] <= short_id < baskets[i]:
                 return f'{i:02}', short_id, item_id // 1000
