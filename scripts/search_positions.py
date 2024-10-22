@@ -62,7 +62,7 @@ def locate_item_position(query: str, item_id: int) -> tuple[int, WBItem] | tuple
 def search_positions(filename: Path):
 
     df = pd.read_excel(filename)
-    df['Позиция'] = df['Позиция'].astype(str)
+    df['Позиция'] = ''
 
     for row_i, row in df.iterrows():
         search_query = row['Ссылка']
