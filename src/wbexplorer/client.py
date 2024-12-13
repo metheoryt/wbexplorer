@@ -1,7 +1,7 @@
 import datetime
 import json
 from decimal import Decimal
-
+from itertools import batched
 import requests
 from fake_useragent import FakeUserAgent
 
@@ -10,6 +10,7 @@ from .wbtypes import WBItem
 
 BASE_URL = 'https://www.wildberries.ru/'
 SEARCH_URL = 'https://search.wb.ru/exactmatch/sng/common/v7/search'
+DETAILS_URL = 'https://card.wb.ru/cards/v2/detail'
 
 
 class Client:
@@ -89,3 +90,25 @@ class Client:
             )
         print('price history for', item_id, ':', hist)
         return hist
+
+    def details_many(self, item_ids: list[int]) -> list[WBItem]:
+        many = []
+        for batch in batched(item_ids, 20):
+            # max 10 items in one query
+            response = self.session.get(DETAILS_URL, params={
+                'appType': 1,
+                'curr': 'rub',
+                'dest': self.dest,
+                'spp': 30,
+                'hide_dtype': 10,
+                'ab_testing': False,
+                'nm': ';'.join(map(str, batch)),
+            })
+            response.raise_for_status()
+            data = response.json()
+            print(data)
+            many.extend(list(map(WBItem.from_dict, data['data']['products'])))
+        return many
+
+    def details(self, item_id: int) -> WBItem:
+        return self.details_many([item_id])[0]
