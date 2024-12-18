@@ -14,6 +14,7 @@ wb = Client(
     destination=123585476  # г Пушкино, Октябрьская Улица 51а
 )
 
+
 def get_search_results(query: str, page: int) -> list[WBItem]:
     """
     Кэшируем результаты запроса, для стабильности и скорости.
@@ -25,18 +26,22 @@ def get_search_results(query: str, page: int) -> list[WBItem]:
 
     results = []
     for i in range(5):  # 5 попыток
-        if i:
-            print(f'sleeping {i*2} seconds before querying wb')
-            time.sleep(i*2)
+        print(f'sleeping {(i + 1)*3} seconds before querying wb')
+        time.sleep(i*3)
         try:
             results = wb.search(query, page)
         except KeyError:
             print(f'query "{query}", page {page}, try #{i+1}, failed to get results')
             continue
         else:
+            if len(results) == 1:  # 1 результат значит что что-то не так, это не та выдача что нам нужна
+                print(f'query "{query}", page {page}, try #{i + 1}, 1 result - retrying')
+                continue
             _SEARCH_CACHE[(query, page)] = results
             print(f'query "{query}", page {page}, try #{i+1}, {len(results)} results')
             break
+    else:
+        raise RuntimeError(f'failed to query wildberries 5 times with page={page} and query={query!r}')
     return results
 
 
