@@ -22,8 +22,9 @@ class Client:
         self.session = requests.Session()
         self.session.headers.update({'User-Agent': FakeUserAgent().getChrome['useragent']})
         # check connection, get any cookies required
-        r = self.session.get(BASE_URL)
-        r.raise_for_status()
+        # UPD seems that this is not required anymore
+        # r = self.session.get(BASE_URL)
+        # r.raise_for_status()
 
     def search(self, query: str, page: int = 1) -> list[WBItem]:
         """
