@@ -10,7 +10,7 @@ from .wbtypes import WBItem
 
 BASE_URL = 'https://www.wildberries.ru/'
 SEARCH_URL = 'https://search.wb.ru/exactmatch/sng/common/v7/search'
-DETAILS_URL = 'https://card.wb.ru/cards/v2/detail'
+DETAILS_URL = 'https://card.wb.ru/cards/v4/detail'
 
 
 class Client:
@@ -108,7 +108,7 @@ class Client:
             response.raise_for_status()
             data = response.json()
             print(data)
-            many.extend(list(map(WBItem.from_dict, data['data']['products'])))
+            many.extend(list(map(WBItem.from_dict, data['products'])))
         return many
 
     def details(self, item_id: int) -> WBItem:

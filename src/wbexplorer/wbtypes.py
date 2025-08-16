@@ -17,7 +17,7 @@ class WBPrices:
     def from_dict(cls, data: dict) -> 'WBPrices':
         return cls(
             basic=data.get('basic'),
-            total=data.get('total')
+            total=data.get('product')
         )
 
 @dataclass
